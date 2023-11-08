@@ -6,6 +6,7 @@ import {
   PencilLine,
   Trash2,
 } from "lucide-react";
+import { EventsData } from "@/types";
 import { Button } from "./ui/button";
 import { Checkbox } from "./ui/checkbox";
 import {
@@ -17,17 +18,7 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 
-export type Events = {
-  unit_reported: string;
-  enemy_unit: string;
-  date_of_activity: string;
-  activity: string;
-  location: string;
-  bdp_status: string;
-  rpsb_deployment_status: string;
-};
-
-export const columns: ColumnDef<Events>[] = [
+export const columns: ColumnDef<EventsData>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -47,6 +38,7 @@ export const columns: ColumnDef<Events>[] = [
     enableSorting: false,
     enableHiding: false,
   },
+
   {
     accessorKey: "unit_reported",
     header: ({ column }) => {
@@ -61,6 +53,7 @@ export const columns: ColumnDef<Events>[] = [
       );
     },
   },
+
   {
     accessorKey: "enemy_unit",
     header: ({ column }) => {
@@ -75,15 +68,71 @@ export const columns: ColumnDef<Events>[] = [
       );
     },
   },
-  { accessorKey: "date_of_activity", header: "Date of Activity" },
+
+  {
+    accessorKey: "date_of_activity",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Date of Activity
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const opt: Intl.DateTimeFormatOptions = {
+        weekday: "short",
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        timeZone: "Asia/Manila",
+      };
+      const dte: string = row.getValue("date_of_activity");
+      const formatted = new Intl.DateTimeFormat("en-US", opt).format(
+        new Date(dte)
+      );
+      return formatted;
+    },
+  },
+
   { accessorKey: "activity", header: "Activity" },
-  { accessorKey: "location", header: "Location" },
+
+  {
+    accessorFn: (row) =>
+      `${typeof row.brgy === "string" ? row.brgy : ""}, ${
+        typeof row.municipality === "string" ? row.municipality : ""
+      }, ${typeof row.province === "string" ? row.province : ""}`,
+    header: "Location",
+  },
+
   { accessorKey: "bdp_status", header: "BDP Benefeciary Status" },
-  { accessorKey: "rpsb_deployment_status", header: "R-PSB Deployment Status" },
+
+  {
+    accessorKey: "rpsb_deployment_status",
+    header: "R-PSB Deployment Status",
+    cell: ({ row }) => {
+      const rpsbDepStatus = row.getValue("rpsb_deployment_status");
+      const formatted =
+        rpsbDepStatus && typeof rpsbDepStatus === "string"
+          ? rpsbDepStatus
+              .split(" ")
+              .map(
+                (word) =>
+                  word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+              )
+              .join(" ")
+          : "";
+      return formatted;
+    },
+  },
+
   {
     id: "actions",
     cell: ({ row }) => {
-      const event = row.original;
+      const events = row.original;
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -95,9 +144,13 @@ export const columns: ColumnDef<Events>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(event.location)}
+              onClick={() =>
+                navigator.clipboard.writeText(
+                  `lat: ${events.latitude} lng: ${events.longitude}`
+                )
+              }
             >
-              Copy location
+              Copy latlong
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
