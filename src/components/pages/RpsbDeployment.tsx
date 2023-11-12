@@ -1,7 +1,5 @@
-import Container from "../ui/Container";
-
 const RpsbDeployment = () => {
-  return <Container>R-PSB deployment</Container>;
+  return <h1 className="font-bold text-3xl">R-PSB deployment</h1>;
 };
 
 export default RpsbDeployment;

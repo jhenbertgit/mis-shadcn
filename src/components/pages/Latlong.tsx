@@ -1,10 +1,9 @@
-import Container from '../ui/Container'
 
 const Latlong = () => {
   return (
-    <Container>
+    <h1 className="font-bold text-3xl">
       Latlong
-    </Container>
+    </h1>
   )
 }
 

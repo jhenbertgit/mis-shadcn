@@ -1,36 +1,26 @@
-import { useEffect, useState } from "react";
 import DataTable from "../DataTable";
 import { columns } from "../Columns";
-import { EventsData } from "@/types";
-import Container from "../ui/Container";
+import { useFetch } from "../hook/use-fetch";
+import Icons from "../ui/icons";
 
 const url = import.meta.env.VITE_URL;
 
 const ThreatGrpEvents = () => {
-  const [data, setData] = useState<EventsData[]>([]);
-  const [error, setError] = useState<Error | null>(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(`http://${url}:5000/api/v1/events`);
-        const eventsData: EventsData[] = await response.json();
-        if (response.ok) {
-          setData(eventsData);
-        }
-      } catch (error) {
-        setError(error as Error);
-      }
-    };
-    fetchData();
-  }, []);
-  console.log(data);
+  const { data, isLoaded, error } = useFetch({ url });
   return (
-    <Container>
-      <div className="py-10">
-        <DataTable columns={columns} data={data} />
-      </div>
-    </Container>
+    <>
+      {isLoaded ? (
+        <div className="py-10">
+          <DataTable columns={columns} data={data} />
+        </div>
+      ) : error ? (
+        <p>
+          {error.name}: {error.message}
+        </p>
+      ) : (
+        <Icons.spinner className="h-7 w-7 animate-[spin_2s_linear_infinite] mr-3" />
+      )}
+    </>
   );
 };
 

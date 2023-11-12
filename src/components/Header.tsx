@@ -1,14 +1,14 @@
+import { NavLink } from "react-router-dom";
 import { Menu } from "lucide-react";
 import Container from "./ui/Container";
-import { Button } from "./ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import ModeToggle from "./ModeToggle";
 
 const routes = [
-  { href: "/", label: "Events" },
-  { href: "/bdp", label: "Search BDP Barangay " },
-  { href: "/rpsb", label: "Search R-PSB Deployment" },
-  { href: "/latlong", label: "Search Latlong" },
+  { href: "", label: "Events" },
+  { href: "bdp", label: "Search BDP Barangay " },
+  { href: "rpsb", label: "Search R-PSB Deployment" },
+  { href: "latlong", label: "Search Latlong" },
 ];
 
 const Header = () => {
@@ -24,9 +24,17 @@ const Header = () => {
               <SheetContent side="left" className="w-[300px] sm:w-[400px]">
                 <nav className="flex flex-col gap-4 mt-6">
                   {routes.map((route, i) => (
-                    <a key={i} href={route.href}>
+                    <NavLink
+                      key={i}
+                      to={route.href}
+                      className={({ isActive }) =>
+                        isActive
+                          ? "text-sm font-bold transition-colors"
+                          : "text-sm font-medium transition-colors"
+                      }
+                    >
                       {route.label}
-                    </a>
+                    </NavLink>
                   ))}
                 </nav>
               </SheetContent>
@@ -37,14 +45,17 @@ const Header = () => {
           </div>
           <nav className="mx-6 space-x-4 lg:space-x-6 hidden md:block">
             {routes.map((route, i) => (
-              <Button asChild key={i} variant="ghost">
-                <a
-                  href={route.href}
-                  className="text-sm font-medium transition-colors"
-                >
-                  {route.label}
-                </a>
-              </Button>
+              <NavLink
+                key={i}
+                to={route.href}
+                className={({ isActive }) =>
+                  isActive
+                    ? "text-sm font-bold transition-colors"
+                    : "text-sm font-medium transition-colors"
+                }
+              >
+                {route.label}
+              </NavLink>
             ))}
           </nav>
           <div>

@@ -1,7 +1,5 @@
-import Container from "../ui/Container";
-
 const BdpBrgy = () => {
-  return <Container>BDP barangay search</Container>;
+  return <h1 className="font-bold text-3xl">BDP barangay search</h1>;
 };
 
 export default BdpBrgy;
