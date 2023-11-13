@@ -2,11 +2,12 @@ import DataTable from "../DataTable";
 import { columns } from "../Columns";
 import { useFetch } from "../hook/use-fetch";
 import Icons from "../ui/icons";
+import { EventsData } from "@/types";
 
 const url = import.meta.env.VITE_URL_EVENTS;
 
 const ThreatGrpEvents = () => {
-  const { data, isLoaded, error } = useFetch({ url });
+  const { data, isLoaded, error } = useFetch<EventsData>({ url });
   return (
     <>
       {isLoaded ? (
