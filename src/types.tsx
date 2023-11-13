@@ -26,3 +26,8 @@ export type EventsData = {
   type: string;
   rpsb_deployment_status: string;
 };
+
+export interface UseFetch {
+  url: string;
+  options?: RequestInit;
+}

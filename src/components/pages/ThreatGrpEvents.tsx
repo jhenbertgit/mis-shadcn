@@ -3,7 +3,7 @@ import { columns } from "../Columns";
 import { useFetch } from "../hook/use-fetch";
 import Icons from "../ui/icons";
 
-const url = import.meta.env.VITE_URL;
+const url = import.meta.env.VITE_URL_EVENTS;
 
 const ThreatGrpEvents = () => {
   const { data, isLoaded, error } = useFetch({ url });
