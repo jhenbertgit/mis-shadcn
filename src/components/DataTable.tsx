@@ -28,6 +28,14 @@ import {
   DropdownMenuContent,
 } from "./ui/dropdown-menu";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -156,21 +164,72 @@ const DataTable = <TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <div className="flex item-center justify-end space-x-2 py-4">
+      <div className="flex item-center justify-end space-x-1 py-4">
         <Button
+          size="sm"
+          variant="outline"
+          onClick={() => table.setPageIndex(0)}
+          disabled={!table.getCanPreviousPage()}
+        >
+          {"<<"}
+        </Button>
+        <Button
+          size="sm"
           variant="outline"
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
         >
-          Previous
+          {"<"}
         </Button>
         <Button
+          size="sm"
           variant="outline"
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
         >
-          Next
+          {">"}
         </Button>
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+          disabled={!table.getCanNextPage()}
+        >
+          {">>"}
+        </Button>
+        <span className="flex items-center gap-1">
+          <div>Page</div>
+          <strong>
+            {table.getState().pagination.pageIndex + 1} of{" "}
+            {table.getPageCount()}
+          </strong>
+        </span>
+        <span className="flex items-center gap-1">
+          | Go to page:
+          <Input
+            type="number"
+            defaultValue={table.getState().pagination.pageIndex + 1}
+            onChange={(event) => {
+              const page = event.target.value
+                ? Number(event.target.value) - 1
+                : 0;
+              table.setPageIndex(page);
+            }}
+            className="w-16"
+          />
+        </span>
+        <select
+          value={table.getState().pagination.pageSize}
+          onChange={(event) => {
+            table.setPageSize(Number(event.target.value));
+          }}
+        >
+          {[10, 20, 30, 40, 50].map((pageSize) => (
+            <option key={pageSize} value={pageSize}>
+              Show {pageSize}
+            </option>
+          ))}
+        </select>
       </div>
     </>
   );
