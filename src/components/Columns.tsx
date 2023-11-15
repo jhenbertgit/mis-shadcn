@@ -98,13 +98,27 @@ export const columns: ColumnDef<EventsData>[] = [
     },
   },
 
-  { accessorKey: "activity", header: "Activity" },
+  {
+    accessorKey: "activity",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Activity
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+  },
 
   {
-    accessorFn: (row) =>
-      `${typeof row.brgy === "string" ? row.brgy : ""}, ${
+    accessorFn: (row) => {
+      return `${typeof row.brgy === "string" ? row.brgy : ""}, ${
         typeof row.municipality === "string" ? row.municipality : ""
-      }, ${typeof row.province === "string" ? row.province : ""}`,
+      }, ${typeof row.province === "string" ? row.province : ""}`;
+    },
     header: "Location",
   },
 

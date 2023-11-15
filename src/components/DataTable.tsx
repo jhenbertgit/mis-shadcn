@@ -31,11 +31,11 @@ import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import Filter from "./Filter";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -72,21 +72,9 @@ const DataTable = <TData, TValue>({
   return (
     <>
       <div className="flex items-center space-x-2 py-3">
-        <Input
-          placeholder="Filter Threat Group"
-          value={
-            (table.getColumn("enemy_unit")?.getFilterValue() as string) ?? ""
-          }
-          onChange={(event) => {
-            table.getColumn("enemy_unit")?.setFilterValue(event.target.value);
-          }}
-          className="max-w-sm"
-        />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
-              Columns
-            </Button>
+            <Button variant="outline">Columns</Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             {table
@@ -113,7 +101,6 @@ const DataTable = <TData, TValue>({
           {table.getFilteredRowModel().rows.length} row(s) selected.
         </div>
       </div>
-
       <div className="rounded-md border mt-2">
         <Table>
           <TableHeader>
@@ -122,12 +109,21 @@ const DataTable = <TData, TValue>({
                 {headerGroup.headers.map((header) => {
                   return (
                     <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                      {header.isPlaceholder ? null : (
+                        <div className="flex flex-col justify-evenly items-baseline space-y-2 py-1">
+                          <div>
+                            {flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                          </div>
+                          {header.column.getCanFilter() ? (
+                            <div>
+                              <Filter column={header.column} table={table} />
+                            </div>
+                          ) : null}
+                        </div>
+                      )}
                     </TableHead>
                   );
                 })}
@@ -218,18 +214,26 @@ const DataTable = <TData, TValue>({
             className="w-16"
           />
         </span>
-        <select
-          value={table.getState().pagination.pageSize}
-          onChange={(event) => {
-            table.setPageSize(Number(event.target.value));
-          }}
-        >
-          {[10, 20, 30, 40, 50].map((pageSize) => (
-            <option key={pageSize} value={pageSize}>
-              Show {pageSize}
-            </option>
-          ))}
-        </select>
+        <div className="w-30">
+          <Select
+            defaultValue={table.getState().pagination.pageSize.toString()}
+            onValueChange={(selectedValue) => {
+              const pageSize = Number(selectedValue);
+              table.setPageSize(pageSize);
+            }}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Show rows per page" />
+            </SelectTrigger>
+            <SelectContent>
+              {[10, 20, 30, 40, 50].map((pageSize) => (
+                <SelectItem key={pageSize} value={pageSize.toString()}>
+                  Show {pageSize}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
       </div>
     </>
   );
