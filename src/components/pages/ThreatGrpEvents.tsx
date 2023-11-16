@@ -10,7 +10,7 @@ const ThreatGrpEvents = () => {
   const { data, isLoaded, error } = useFetch<EventsData[]>({
     fetchFn: async () => {
       const response = await fetch(url);
-      const data = await response.json();
+      const data: EventsData[] = await response.json();
       return data;
     },
     initData: [],
