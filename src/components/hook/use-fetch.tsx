@@ -1,31 +1,31 @@
 import { useEffect, useState } from "react";
 
 interface UseFetchProps<T> {
-  url: string;
-  options?: RequestInit;
+  fetchFn: () => Promise<T>;
+  initData: T;
 }
 
-export const useFetch = <T,>({ url, options }: UseFetchProps<T>) => {
-  const [data, setData] = useState<T[]>([]);
+export const useFetch = <T,>({ fetchFn, initData }: UseFetchProps<T>) => {
+  const [data, setData] = useState<T>(initData);
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(url, options);
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status ${response.status}`);
+        const result = await fetchFn();
+        setData(result);
+      } catch (error: any) {
+        if (error.name === "AbortError") {
+          console.log("Fetch aborted");
+        } else {
+          setError(error as Error);
         }
-        const responseData: T[] = await response.json();
-        setData(responseData);
+      } finally {
         setIsLoaded(true);
-      } catch (error) {
-        setError(error as Error);
       }
     };
     fetchData();
-  }, [url, options]);
-
+  }, []);
   return { data, error, isLoaded };
 };
