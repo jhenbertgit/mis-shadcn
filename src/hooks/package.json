@@ -1,0 +1,22 @@
+{
+  "name": "use-fetch-custom",
+  "version": "1.0.0",
+  "description": "Custom hooks in Typescript to fetch data from API or database using any method returning a promise.",
+  "main": "use-fetch.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "useFetch",
+    "promise",
+    "api",
+    "custom",
+    "hooks"
+  ],
+  "author": "Jhenbert",
+  "license": "MIT",
+  "peerDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  }
+}

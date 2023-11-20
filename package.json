@@ -26,7 +26,8 @@
     "react-router-dom": "^6.18.0",
     "shadcn-ui": "^0.4.1",
     "tailwind-merge": "^2.0.0",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "use-fetch-custom": "^1.0.0"
   },
   "devDependencies": {
     "@types/node": "^20.8.10",

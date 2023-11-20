@@ -1,6 +1,6 @@
 import DataTable from "../DataTable";
 import { columns } from "../Columns";
-import { useFetch } from "../hook/use-fetch";
+import { useFetch } from "use-fetch-custom";
 import Icons from "../ui/icons";
 import { EventsData } from "@/types";
 
