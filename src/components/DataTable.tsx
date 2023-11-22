@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -10,6 +10,7 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
+  RowData,
 } from "@tanstack/react-table";
 
 import {
@@ -37,6 +38,27 @@ import {
 } from "./ui/select";
 import Filter from "./Filter";
 
+declare module "@tanstack/react-table" {
+  interface TableMeta<TData extends RowData> {
+    updateData: (rowIndex: number, columnId: string, value: TData) => void;
+  }
+}
+
+const useSkipper = () => {
+  const shouldSkipRef = useRef(true);
+  const shouldSkip = shouldSkipRef.current;
+
+  const skip = useCallback(() => {
+    shouldSkipRef.current = false;
+  }, []);
+
+  useEffect(() => {
+    shouldSkipRef.current = true;
+  }, []);
+
+  return [shouldSkip, skip] as const;
+};
+
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
@@ -50,10 +72,38 @@ const DataTable = <TData, TValue>({
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
+  const [autoResetPageIndex, skipAutoResetPageIndex] = useSkipper();
+  const [updatedData, setUpdatedData] = useState<TData[]>(data);
+
+  //make table to be editable
+  const defaultColumn: Partial<ColumnDef<TData>> = {
+    cell: ({ getValue, row: { index }, column: { id }, table }) => {
+      const initialValue = getValue();
+
+      const [value, setValue] = useState<TData>(initialValue as TData);
+
+      const onBlur = () => {
+        table.options.meta?.updateData(index, id, value);
+      };
+
+      useEffect(() => {
+        setValue(initialValue as TData);
+      }, [initialValue]);
+
+      return (
+        <Input
+          value={value as string}
+          onChange={(e) => setValue(e.target.value as TData)}
+          onBlur={onBlur}
+        />
+      );
+    },
+  };
 
   const table = useReactTable({
     data,
     columns,
+    defaultColumn,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
@@ -62,13 +112,54 @@ const DataTable = <TData, TValue>({
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
+    autoResetPageIndex,
     state: {
       sorting,
       columnFilters,
       columnVisibility,
       rowSelection,
     },
+    // Provide our updateData function to our table meta
+    meta: {
+      updateData: (rowIndex, columnId, value) => {
+        skipAutoResetPageIndex();
+        const newData = updatedData.map((row, index) => {
+          if (index === rowIndex) {
+            return {
+              ...row,
+              [columnId]: value,
+            };
+          }
+          return row;
+        });
+        setUpdatedData(newData);
+
+        // const editedRow = newData[rowIndex];
+        // try {
+        //   const response = await fetch(
+        //     `http://192.168.68.239:5000/api/v1/events/${editedRow.id}`,
+        //     {
+        //       method: "PUT",
+        //       mode: "cors",
+        //       headers: {
+        //         "Content-Type": "application/json",
+        //       },
+        //       body: JSON.stringify(editedRow),
+        //     }
+        //   );
+        //   if (response.ok) {
+        //     const { message } = await response.json();
+        //     console.log(message);
+        //   } else {
+        //     console.log("Failed to update data");
+        //   }
+        // } catch (error) {
+        //   console.error("Error updating data: ", error);
+        // }
+      },
+    },
   });
+
   return (
     <>
       <div className="flex items-center space-x-2 py-3">

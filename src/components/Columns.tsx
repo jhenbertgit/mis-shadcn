@@ -147,6 +147,7 @@ export const columns: ColumnDef<EventsData>[] = [
     id: "actions",
     cell: ({ row }) => {
       const events = row.original;
+
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -169,12 +170,20 @@ export const columns: ColumnDef<EventsData>[] = [
             <DropdownMenuSeparator />
             <DropdownMenuItem>
               <div className="flex-1 space-x-1">
-                <Button variant="ghost" size="sm" onClick={() => alert("edit")}>
+                <Button variant="ghost" size="sm">
                   <PencilLine size={18} />
                 </Button>
-                <Button variant="ghost" size="sm" onClick={() => alert("view")}>
+
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() =>
+                    alert(`id: ${events.id} ${events.details_of_activity}`)
+                  }
+                >
                   <Eye size={18} />
                 </Button>
+
                 <Button
                   variant="ghost"
                   size="sm"
