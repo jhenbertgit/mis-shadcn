@@ -13,8 +13,8 @@ export const useFetch = <T>({ fetchFn, initData }: UseFetch<T>) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await fetchFn();
-        setData(result);
+        const response = await fetchFn();
+        setData(response);
       } catch (error) {
         setError(error as Error);
       } finally {
@@ -22,6 +22,6 @@ export const useFetch = <T>({ fetchFn, initData }: UseFetch<T>) => {
       }
     };
     fetchData();
-  }, []);
+  }, [fetchFn]);
   return { data, error, isLoaded };
 };

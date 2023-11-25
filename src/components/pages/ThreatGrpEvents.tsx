@@ -1,17 +1,18 @@
 import DataTable from "../DataTable";
 import { columns } from "../Columns";
-import { useFetch } from "@jhenbertnpm/use-fetch";
+// import { useFetch } from "@jhenbertnpm/use-fetch";
+
 import Icons from "../ui/icons";
-import { EventsData } from "@/types";
+import { useFetch } from "@/hooks/use-fetch";
 
 const url = import.meta.env.VITE_URL_EVENTS;
 
 const ThreatGrpEvents = () => {
-  const { data, isLoaded, error } = useFetch<EventsData[]>({
+  const { data, isLoaded, error } = useFetch({
     fetchFn: async () => {
       const response = await fetch(url);
-      const data: EventsData[] = await response.json();
-      return data;
+      const result = await response.json();
+      return result;
     },
     initData: [],
   });
