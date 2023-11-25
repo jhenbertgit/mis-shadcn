@@ -22,6 +22,6 @@ export const useFetch = <T>({ fetchFn, initData }: UseFetch<T>) => {
       }
     };
     fetchData();
-  }, [fetchFn]);
+  }, []);
   return { data, error, isLoaded };
 };

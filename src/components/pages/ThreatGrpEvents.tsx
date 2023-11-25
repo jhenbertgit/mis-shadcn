@@ -1,9 +1,7 @@
 import DataTable from "../DataTable";
 import { columns } from "../Columns";
-// import { useFetch } from "@jhenbertnpm/use-fetch";
-
+import { useFetch } from "@jhenbertnpm/use-fetch";
 import Icons from "../ui/icons";
-import { useFetch } from "@/hooks/use-fetch";
 
 const url = import.meta.env.VITE_URL_EVENTS;
 
