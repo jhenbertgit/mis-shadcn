@@ -6,6 +6,7 @@ import RpsbDeployment from "./components/pages/RpsbDeployment";
 import ErrorPage from "./components/pages/ErrorPage";
 import RootLayout from "./components/pages/Root";
 import { useEffect } from "react";
+import Test from "./components/pages/Test";
 
 const router = createBrowserRouter([
   {
@@ -20,6 +21,7 @@ const router = createBrowserRouter([
       { path: "bdp", element: <BdpBrgy /> },
       { path: "latlong", element: <Latlong /> },
       { path: "rpsb", element: <RpsbDeployment /> },
+      { path: "test", element: <Test /> },
     ],
   },
 ]);
