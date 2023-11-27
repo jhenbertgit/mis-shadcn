@@ -19,11 +19,14 @@ const Test = () => {
     initData: [],
   });
   return (
-    <ul>
+    <>
       {data.map((product) => (
-        <li key={product.name}>{product.name}</li>
+        <ul key={product.name}>
+          <li>{product.name}</li>
+          <li>{product.price}</li>
+        </ul>
       ))}
-    </ul>
+    </>
   );
 };
 
