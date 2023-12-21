@@ -1,3 +1,5 @@
+import { Table } from "@tanstack/react-table";
+
 export type Theme = "dark" | "light" | "system";
 
 export type EventsData = {
@@ -25,4 +27,8 @@ export type EventsData = {
   gf_vertical_units: string;
   type: string;
   rpsb_deployment_status: string;
+};
+
+export type TableProps<TData> = {
+  table: Table<TData>;
 };

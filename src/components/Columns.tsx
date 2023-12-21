@@ -1,11 +1,4 @@
 import { ColumnDef } from "@tanstack/react-table";
-import {
-  ArrowUpDown,
-  Eye,
-  MoreHorizontal,
-  PencilLine,
-  Trash2,
-} from "lucide-react";
 import { EventsData } from "@/types";
 import { Button } from "./ui/button";
 import { Checkbox } from "./ui/checkbox";
@@ -17,6 +10,13 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
+import {
+  ArrowUpDown,
+  Eye,
+  MoreHorizontal,
+  PencilLine,
+  Trash2,
+} from "lucide-react";
 
 export const columns: ColumnDef<EventsData>[] = [
   {
